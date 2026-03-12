@@ -46,7 +46,7 @@ string categoryToString(SneakerCategory c) {
     }
 }
 
-// 6. Display Function for a single sneaker
+// Display Function for a single sneaker
 void displaySneaker(Sneaker s) {
     cout << left << setw(20) << "Model Name:" << s.modelName << "\n"
          << left << setw(20) << "Brand:" << brandToString(s.brand) << "\n"
@@ -58,7 +58,7 @@ void displaySneaker(Sneaker s) {
          << "----------------------------------------\n";
 }
 
-// 6. Display Function for the whole array
+// Display Function for the whole array
 void displayAll(Sneaker arr[], int count) {
     if (count == 0) {
         cout << "\nYour collection is currently empty.\n";
@@ -117,6 +117,73 @@ void addSneaker(Sneaker arr[], int& count, int max) {
     cout << "\nSneaker added successfully!\n";
 }
 
+// 8. Search by Brand
+void searchByBrand(Sneaker arr[], int count, SneakerBrand target) {
+    bool found = false;
+    cout << "\n=== Search Results: " << brandToString(target) << " ===\n";
+    cout << "----------------------------------------\n";
+    for (int i = 0; i < count; i++) {
+        if (arr[i].brand == target) {
+            displaySneaker(arr[i]);
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "No sneakers found for this brand.\n";
+        cout << "----------------------------------------\n";
+    }
+}
+
+// 9. Search by Size
+void searchBySize(Sneaker arr[], int count, double targetSize) {
+    bool found = false;
+    cout << "\n=== Search Results: Size " << targetSize << " ===\n";
+    cout << "----------------------------------------\n";
+    for (int i = 0; i < count; i++) {
+        if (arr[i].size == targetSize) {
+            displaySneaker(arr[i]);
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "No sneakers found for this size.\n";
+        cout << "----------------------------------------\n";
+    }
+}
+
+// 10. Sort by Price (Bubble Sort)
+void sortByPrice(Sneaker arr[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (arr[j].price > arr[j + 1].price) {
+                Sneaker temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    cout << "\nCollection successfully sorted by Price (Lowest to Highest).\n";
+}
+
+// 11. Sort by Year Released (Selection Sort)
+void sortByYear(Sneaker arr[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < count; j++) {
+            if (arr[j].yearReleased < arr[minIndex].yearReleased) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            Sneaker temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+    }
+    cout << "\nCollection successfully sorted by Year Released (Oldest to Newest).\n";
+}
+
+
 int main() {
     // 5. Array of Structs
     const int MAX_SNEAKERS = 20;
@@ -139,10 +206,10 @@ int main() {
         cout << "\n===== Sneaker Collection Manager =====\n";
         cout << "1. Display All Sneakers\n";
         cout << "2. Add a Sneaker\n";
-        cout << "3. Search by Brand        [Part 2]\n";
-        cout << "4. Search by Size         [Part 2]\n";
-        cout << "5. Sort by Price          [Part 2]\n";
-        cout << "6. Sort by Year           [Part 2]\n";
+        cout << "3. Search by Brand\n";
+        cout << "4. Search by Size\n";
+        cout << "5. Sort by Price\n";
+        cout << "6. Sort by Year\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
         
@@ -160,11 +227,31 @@ int main() {
             case 2:
                 addSneaker(collection, count, MAX_SNEAKERS);
                 break;
-            case 3:
-            case 4:
+            case 3: {
+                int brandInput;
+                cout << "Enter Brand (0=Nike, 1=Adidas, 2=Jordan, 3=New Balance, 4=Vans, 5=Other): ";
+                cin >> brandInput;
+                if (brandInput >= 0 && brandInput <= 5) {
+                    searchByBrand(collection, count, static_cast<SneakerBrand>(brandInput));
+                } else {
+                    cout << "Invalid brand choice.\n";
+                }
+                break;
+            }
+            case 4: {
+                double sizeInput;
+                cout << "Enter size to search for: ";
+                cin >> sizeInput;
+                searchBySize(collection, count, sizeInput);
+                break;
+            }
             case 5:
+                sortByPrice(collection, count);
+                displayAll(collection, count); // Optional: Auto-display after sorting
+                break;
             case 6:
-                cout << "\nComing in Part 2...\n";
+                sortByYear(collection, count);
+                displayAll(collection, count); // Optional: Auto-display after sorting
                 break;
             case 0:
                 cout << "\nExiting Collection Manager. Goodbye!\n";
@@ -176,4 +263,3 @@ int main() {
 
     return 0;
 }
-
